@@ -16,9 +16,18 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public List<Product> getProducts() {
+    public List<Product> loadProducts() {
         return productService.loadProducts();
     }
+
+    @GetMapping("/{id}")
+    public Product loadProductById(@PathVariable("id") Integer proId) {
+        return productService.loadProductById(proId);
+    }
+
+
+
+
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -44,11 +53,6 @@ public class ProductController {
         return "Update product partially";
     }
 
-    @GetMapping("/{id}/{slug}")
-    public Product getProductById(@PathVariable("id") Integer proId,
-                                  @PathVariable("slug") String proSlug) {
-        return productService.loadProductById(proId);
-    }
     @GetMapping("/search")
     public List<Product> searchProducts(
             @RequestParam(required = false,defaultValue = "") String name,
