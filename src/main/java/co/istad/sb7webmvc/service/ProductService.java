@@ -1,96 +1,17 @@
 package co.istad.sb7webmvc.service;
 
 import co.istad.sb7webmvc.model.Product;
-import co.istad.sb7webmvc.util.SlugUtil;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
-public class ProductService {
-    private List<Product> products;
+public interface ProductService {
+    void createNewProduct(Product product);
 
-    public ProductService() {
-        products = new ArrayList<>();
-        products.add(Product.builder()
-                .id(1)
-                .name("Dell Desktop")
-                .slug(SlugUtil.toSlug("Dell Desktop"))
-                .price(100.00)
-                .inStock(true)
-                .build());
-        products.add(Product.builder()
-                .id(2)
-                .name("ASUS Laptop")
-                .slug(SlugUtil.toSlug("ASUS Laptop"))
-                .price(960.00)
-                .inStock(true)
-                .build());
-        products.add(Product.builder()
-                .id(3)
-                .name("Mac Book M1 Pro")
-                .slug(SlugUtil.toSlug("Mac Book M1 Pro"))
-                .price(2000.00)
-                .inStock(true)
-                .build());
-        products.add(Product.builder()
-                .id(4)
-                .name("Magic Mouse 2")
-                .slug(SlugUtil.toSlug("Magic Mouse 2"))
-                .price(180.00)
-                .inStock(false)
-                .build());
-    }
+    void deleteProductById(Integer id);
 
-    public List<Product> loadProducts() {
-        return products;
-    }
+    void updateProductById(Integer id, Product product);
 
-    public Product addProduct(Product product) {
-        if (product != null) {
-            product.setSlug(SlugUtil.toSlug(product.getName()));
-            products.add(product);
-            return product;
-        }
-        throw new RuntimeException("Product cannot be added");
-    }
+    List<Product> loadProducts();
 
-    public Product updateProduct(Integer id, Product newProduct) {
-        return products.stream()
-                .filter(product -> product.getId().equals(id))
-                .peek(product -> {
-                    product.setName(newProduct.getName());
-                    product.setSlug(SlugUtil.toSlug(newProduct.getName()));
-                    product.setPrice(newProduct.getPrice());
-                    product.setInStock(newProduct.getInStock());
-                })
-                .findFirst()
-                .orElseThrow();
-    }
-
-    public Product loadProductById(Integer id) {
-        return products.stream()
-                .filter(product -> product.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() ->
-                        new RuntimeException("Product is not found!")
-                );
-    }
-
-    public List<Product> searchProducts(String name, Boolean status) {
-        return products.stream()
-                .filter(product ->
-                        product.getName().toLowerCase()
-                                .contains(name.toLowerCase())
-                                && product.getInStock().equals(status))
-                .toList();
-    }
-
-    public void deleteProductById(Integer id) {
-        products = products.stream()
-                .filter(product -> !product.getId().equals(id))
-                .collect(Collectors.toList());
-    }
+    Product loadProductById(Integer id);
 }
