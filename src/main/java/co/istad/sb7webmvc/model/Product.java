@@ -2,6 +2,8 @@ package co.istad.sb7webmvc.model;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,4 +15,6 @@ public class Product {
     private String slug;
     private Double price;
     private Boolean inStock;
+    private Supplier supplier;
+    private List<Category> categories;
 }
