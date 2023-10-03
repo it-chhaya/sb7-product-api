@@ -2,6 +2,7 @@ package co.istad.sb7webmvc.service.impl;
 
 import co.istad.sb7webmvc.dto.CreateProductDto;
 import co.istad.sb7webmvc.dto.UpdateProductDto;
+import co.istad.sb7webmvc.mapper.ProductMapper;
 import co.istad.sb7webmvc.model.Category;
 import co.istad.sb7webmvc.model.Product;
 import co.istad.sb7webmvc.model.Supplier;
@@ -20,19 +21,16 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     @Transactional
     @Override
     public void updateProductById(Integer id, UpdateProductDto updateProductDto) {
 
-        Product product = Product.builder()
-                .id(id)
-                .name(updateProductDto.name())
-                .description(updateProductDto.description())
-                .supplier(Supplier.builder()
-                        .id(updateProductDto.supplierId())
-                        .build())
-                .build();
+        Product product = productMapper.fromUpdateProductDto(
+                updateProductDto
+        );
+        product.setId(id);
 
         if (product.getName() != null) {
             product.setSlug(SlugUtil.toSlug(updateProductDto.name()));
@@ -52,16 +50,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void createNewProduct(CreateProductDto createProductDto) {
         // Map DTO to POJO
-        Product product = Product.builder()
-                .name(createProductDto.name())
-                .slug(SlugUtil.toSlug(createProductDto.name()))
-                .description(createProductDto.description())
-                .price(createProductDto.price())
-                .inStock(createProductDto.inStock())
-                .supplier(Supplier.builder()
-                        .id(createProductDto.supplierId())
-                        .build())
-                .build();
+        Product product = productMapper.fromCreateProductDto(createProductDto);
+        product.setSlug(SlugUtil.toSlug(createProductDto.name()));
 
         // Start inserting a product
         productRepository.insert(product);
