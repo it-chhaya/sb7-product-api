@@ -1,6 +1,7 @@
 package co.istad.sb7webmvc.repository;
 
 import co.istad.sb7webmvc.model.Product;
+import co.istad.sb7webmvc.repository.provider.ProductProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository {
 
-    @Select("SELECT * FROM products")
+    @Select("SELECT * FROM products ORDER BY id DESC")
     @Results(id = "productResultMap", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "name", column = "name"),
@@ -27,4 +28,17 @@ public interface ProductRepository {
     @ResultMap("productResultMap")
     Optional<Product> selectById(@Param("id") Integer id);
 
+    @InsertProvider(ProductProvider.class)
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    void insert(@Param("p") Product product);
+
+    @InsertProvider(ProductProvider.class)
+    void insertProductCategory(@Param("proId") Integer productId,
+                               @Param("cateId") Integer categoryId);
+
+    @UpdateProvider(ProductProvider.class)
+    void update(@Param("p") Product product);
+
+    @Delete("DELETE FROM products_categories WHERE product_id = #{proId}")
+    void deleteProductCategories(@Param("proId") Integer productId);
 }

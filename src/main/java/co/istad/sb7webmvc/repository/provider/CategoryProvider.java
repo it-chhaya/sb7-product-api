@@ -4,7 +4,7 @@ import org.apache.ibatis.builder.annotation.ProviderMethodResolver;
 import org.apache.ibatis.jdbc.SQL;
 
 public class CategoryProvider implements ProviderMethodResolver {
-    private String TB_CATEGORY = "categories";
+    private final String TB_CATEGORY = "categories";
     public String selectProductCategories() {
         return new SQL() {{
 

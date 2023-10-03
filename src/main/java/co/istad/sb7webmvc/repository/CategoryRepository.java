@@ -14,5 +14,6 @@ import java.util.List;
 public interface CategoryRepository {
 
     @SelectProvider(CategoryProvider.class)
-    List<Category> selectProductCategories(@Param("productId") Integer productId);
+    List<Category> selectProductCategories(
+            @Param("productId") Integer productId);
 }

@@ -1,5 +1,7 @@
 package co.istad.sb7webmvc.controller;
 
+import co.istad.sb7webmvc.dto.CreateProductDto;
+import co.istad.sb7webmvc.dto.UpdateProductDto;
 import co.istad.sb7webmvc.model.Product;
 import co.istad.sb7webmvc.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -25,21 +27,19 @@ public class ProductController {
         return productService.loadProductById(proId);
     }
 
-
-
-
-
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public void createNewProduct(@RequestBody Product product) {
-        productService.createNewProduct(product);
+    public void createNewProduct(@RequestBody CreateProductDto createProductDto) {
+        System.out.println(createProductDto.supplierId());
+        System.out.println(createProductDto.categoryIds());
+        productService.createNewProduct(createProductDto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
     public void updateProduct(@PathVariable Integer id,
-                                 @RequestBody Product newProduct) {
-        productService.updateProductById(id, newProduct);
+                                 @RequestBody UpdateProductDto updateProductDto) {
+        productService.updateProductById(id, updateProductDto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
